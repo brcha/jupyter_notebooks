@@ -1,0 +1,28 @@
+let
+  jupyter = import (builtins.fetchGit {
+    url = https://github.com/tweag/jupyterWith;
+  }) {};
+
+  iPython = jupyter.kernels.iPythonWith {
+    name = "python";
+    packages = p: with p; [ 
+      numpy
+      scipy
+      matplotlib
+#      tensorflow
+    ];
+  };
+
+  iHaskell = jupyter.kernels.iHaskellWith {
+    name = "haskell";
+    packages = p: with p; [ hvega formatting ];
+  };
+
+  iRust = jupyter.kernels.rustWith {};
+
+  jupyterEnvironment =
+    jupyter.jupyterlabWith {
+      kernels = [ iPython iHaskell iRust ];
+    };
+in
+  jupyterEnvironment.env
